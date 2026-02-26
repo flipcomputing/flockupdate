@@ -284,7 +284,14 @@ export const flockMaterial = {
     // Map to keep track of materials and their assigned colours and indices
     const materialToColorMap = new Map();
 
+    const isSayTextPlane = (part) =>
+      part?.name === "textPlane" || part?.metadata?.isSayTextPlane;
+
     function applyColorInOrder(part) {
+      if (isSayTextPlane(part)) {
+        return;
+      }
+
       if (part.material) {
         // Check if the material is already processed
         if (!materialToColorMap.has(part.material)) {
@@ -462,7 +469,12 @@ export const flockMaterial = {
     material.backFaceCulling = false;
 
     // Assign the material to the mesh and its descendants
-    const allMeshes = [mesh].concat(mesh.getDescendants());
+    const allMeshes = [mesh]
+      .concat(mesh.getDescendants())
+      .filter(
+        (part) =>
+          part.name !== "textPlane" && !part.metadata?.isSayTextPlane,
+      );
     allMeshes.forEach((part) => {
       part.material = material;
     });
@@ -475,7 +487,12 @@ export const flockMaterial = {
   },
   setMaterial(meshName, materials) {
     return flock.whenModelReady(meshName, (mesh) => {
-      const allMeshes = [mesh].concat(mesh.getDescendants());
+      const allMeshes = [mesh]
+        .concat(mesh.getDescendants())
+        .filter(
+          (part) =>
+            part.name !== "textPlane" && !part.metadata?.isSayTextPlane,
+        );
       const validMeshes = allMeshes.filter(
         (part) => part instanceof flock.BABYLON.Mesh,
       );

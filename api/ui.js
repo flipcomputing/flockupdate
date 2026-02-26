@@ -439,6 +439,10 @@ export const flockUI = {
             flock.scene,
           );
           plane.name = "textPlane";
+          plane.metadata = {
+            ...(plane.metadata || {}),
+            isSayTextPlane: true,
+          };
           plane.parent = targetMesh;
           plane.alpha = 1;
           plane.checkCollisions = false;
