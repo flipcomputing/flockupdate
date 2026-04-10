@@ -364,13 +364,19 @@ export function initializeUI() {
 }
 
 const adjustViewport = () => {
-	const vh = window.innerHeight * 0.01;
+	const vvHeight = window.visualViewport?.height || window.innerHeight;
+	const vh = vvHeight * 0.01;
 	document.documentElement.style.setProperty("--vh", `${vh}px`);
+	document.documentElement.style.setProperty("--app-height", `${vvHeight}px`);
 };
 
-// Adjust viewport on page load and resize
 window.addEventListener("load", adjustViewport);
 window.addEventListener("resize", adjustViewport);
+window.addEventListener("orientationchange", adjustViewport);
+
+if (window.visualViewport) {
+	window.visualViewport.addEventListener("resize", adjustViewport);
+}
 
 /*
 function toggleToolbox() {
